@@ -1,4 +1,4 @@
-module main;
+/*module main;
 reg  [31:0] read_data1 , read_data2,sign_extend;
 wire [3:0] op_code;
 reg  [4:0] shift_amt;

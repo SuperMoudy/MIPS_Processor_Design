@@ -23,7 +23,7 @@ module Data_Memory(Address , Write_Data , MemWrite , MemRead , Read_Data);
 	
 endmodule
 
-
+/*
 module data_memo_tb;
 
 	reg[31:0]Address;
@@ -61,3 +61,4 @@ module data_memo_tb;
 
 
 endmodule
+*/
