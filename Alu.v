@@ -28,13 +28,12 @@ always @(*)	// at any change in the inputs
 	end	
 endmodule
 
-module ALU(read_data1 , read_data2 , op_code , shift_amt , result,zero);
+module ALU(read_data1, read_data2, op_code, result, zero);
 input [31:0] read_data1 , read_data2;
 input [3:0] op_code;
-input [4:0] shift_amt;
 output reg [31:0] result;
 output reg zero ;
-always@(read_data1 or read_data2 or op_code or shift_amt)
+always@(read_data1 or read_data2 or op_code)
 begin
 zero=1'b0; //reset zero flag 
 if(op_code == 0)
@@ -56,13 +55,13 @@ else if(op_code == 3)
 begin result = read_data1 | read_data2; end
 
 else if(op_code == 4)
-begin result = read_data1 << shift_amt; end
+begin result = read_data1 << read_data2; end
 
 else if(op_code == 5)
-begin result = read_data1 >> shift_amt; end
+begin result = read_data1 >> read_data2; end
 
 else if(op_code == 6)
-begin result = $signed(read_data1) >>> shift_amt; end
+begin result = $signed(read_data1) >>> read_data2; end
 
 else if(op_code == 7)
 begin

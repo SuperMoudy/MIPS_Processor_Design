@@ -48,10 +48,9 @@ BIGMUX2 MUX0(ForwardA,EXDataA,datatowrite,MEMALUOut,0,ALUSrcA);
 alu_control ALUcontrol(EXEX[1:0],EXimm_value[5:0],ALUCon); 
  
   ALU alu(
-        .read_data1 ( ALUSrcA),
-        .read_data2 ( ALUSrcB),
+        .read_data1 (ALUSrcA),
+        .read_data2 (ALUSrcB),
         .op_code    (ALUCon),
-        .shift_amt  (ALUSrcB),  // FIXME
         .result     (EXALUOut),
         .zero       (zero)
     );
