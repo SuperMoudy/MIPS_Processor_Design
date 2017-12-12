@@ -52,7 +52,6 @@ alu_control ALUcontrol(EXEX[1:0],EXimm_value[5:0],ALUCon);
         .read_data1 ( ALUSrcA),
         .read_data2 ( ALUSrcB),
         .op_code    (ALUCon),
-        .shift_amt  (ALUSrcB),  // FIXME
         .result     (EXALUOut),
         .zero       (zero)
     );
