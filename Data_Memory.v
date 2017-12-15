@@ -1,4 +1,4 @@
-module Data_Memory(Address , Write_Data , MemWrite , MemRead , Read_Data);
+module Data_Memory(Address , Write_Data , MemWrite , MemRead , Read_Data, Clock);
 
 	input wire[31:0] Address; //Address computed in case of SW or LW
 	input wire[31:0] Write_Data; //Data to be stored in memory in case of SW instruction
@@ -6,8 +6,9 @@ module Data_Memory(Address , Write_Data , MemWrite , MemRead , Read_Data);
 	input MemRead;   //control signal in case of a memory read operation (like in lw)
 	output reg[31:0] Read_Data; //Data Read from memory in case of LW instruction
 	reg[31:0] D_Memory [0:255]; //Data Memory from inside (256 places)
+        input wire Clock;
 
-	always@(Address or Write_Data or MemWrite or MemRead) //Detect ALU result
+	always@(*)
 	begin
 		if(MemWrite == 0 && MemRead == 1) //For lw instruction
 			Read_Data = D_Memory[Address];
@@ -17,13 +18,13 @@ module Data_Memory(Address , Write_Data , MemWrite , MemRead , Read_Data);
 
 	initial
 	begin
-		D_Memory[3] = 3;
-		D_Memory[7] = 7;
+		D_Memory[3] = 4;
+		D_Memory[7] = 8;
 	end
 	
 endmodule
 
-/*
+
 module data_memo_tb;
 
 	reg[31:0]Address;
@@ -61,4 +62,3 @@ module data_memo_tb;
 
 
 endmodule
-*/
