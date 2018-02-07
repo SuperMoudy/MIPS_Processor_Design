@@ -33,7 +33,7 @@ input [31:0] read_data1 , read_data2;
 input [3:0] op_code;
 output reg [31:0] result;
 output reg zero ;
-always@(read_data1 or read_data2 or op_code)
+always@(*)
 begin
 zero=1'b0; //reset zero flag 
 if(op_code == 0)
@@ -90,7 +90,7 @@ input  [31:0]sign_extend;
 input ALUSrc;
 output reg [31:0]write_data; 
 
-always@(read_data2 or sign_extend or ALUSrc)
+always@(*)
 begin
 
 if(ALUSrc == 0)

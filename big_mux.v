@@ -3,7 +3,7 @@ input [1:0] A;
 input [31:0] X3,X2,X1,X0; 
 output [31:0] Out; 
 reg [31:0] Out; 
-always@(A,X3,X2,X1,X0) 
+always@(*) 
 begin 
   case(A) 
       2'b00: 

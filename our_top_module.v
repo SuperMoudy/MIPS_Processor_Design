@@ -13,6 +13,16 @@ module Clock(clk);
 	end
 endmodule
 
+module MUX(MemtoReg , Read_Data , ALU_Result , Write_Data);
+
+input MemtoReg;
+input[31:0] Read_Data;
+input[31:0] ALU_Result;
+output[31:0] Write_Data;
+
+assign Write_Data = MemtoReg ? Read_Data : ALU_Result;
+
+endmodule
 
 module Adder(in1 , in2 , out);
 	input[31:0] in1;
@@ -22,11 +32,20 @@ module Adder(in1 , in2 , out);
 endmodule
 
 
-module top_mod; 
+module top_mod;
 
 /////////Including Clock Module///////
 	wire clk;
 	Clock c1(clk);
+    /* reg clk; */
+    /* initial begin */
+    /*     clk = 0; */
+    /* end */
+    /* always begin */
+    /*     #1; */
+    /*     clk = ~clk; */
+    /* end */
+
 
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
@@ -47,6 +66,8 @@ module top_mod;
 	wire[31:0] next_PC;
 
 	MUX pc_mux(PC_selector , PC_from_Branch , PC_from_Adder , next_PC);
+        /* assign next_PC = PC_selector === 0 ? PC_from_Branch : */
+        /*                  PC_selector === 1 ? PC_from_Adder  : 1; */
 
 //////////PC Module//////////////
 	wire PCWrite;
@@ -55,9 +76,10 @@ module top_mod;
 
 //////////////Instruction Memory//////////
 	wire[31:0] Instruction;
-	Instruction_Memory(current_PC , Instruction);
+    wire [31:0] addent;
+	Instruction_Memory imem(current_PC , Instruction, addent);
 ///////////////////////////////////////
-	Adder normal_pc_adder(current_PC , 4 , PC_from_Adder);
+	Adder normal_pc_adder(current_PC , addent , PC_from_Adder);
 
 ////////////////////////////////////////
 	wire IFIDWrite;
@@ -78,16 +100,15 @@ module top_mod;
 	//wire [31:0] IDpc_plus_4;//,IDinst; //was reg in tb 
 
 //inputs from ex statge 
-	wire [1:0]EXM; //was reg in tb
+    wire [2:0] M;
 	wire [4:0]EXRegRt; //was reg in tb
 
 //inouts from mem stage 
 	wire [4:0]WBRegRd;  //was reg in tb
-	wire [1:0] WBWB;    //was reg in tb
 	wire [31:0] Write_Data;  //was reg in tb
   
-	wire [1:0]WB;
-	wire [2:0]M;
+	wire [1:0]DecodeWB;
+	wire [2:0]DecodeM;
 	wire [3:0]EX;
 	wire [4:0]IDRegRs,IDRegRt,IDRegRd;
 	wire [31:0]DataA,DataB,imm_value;
@@ -95,9 +116,10 @@ module top_mod;
 //wire [31:0] BranchAddr ;                        //this is PC_from_Branch
 	//wire IFIDWrite; //,PCWrite; brunch_taken,brunch_control,
 
+	wire     [1:0]   WBreg2;
 
-	decode d1(clk , WBRegRd , WBWB , EXM , EXRegRt , Write_Data , PC_from_Adder_to_ID , Instruction_to_ID ,
-		WB , M , EX , IDRegRs , IDRegRt , IDRegRd , DataA , DataB, imm_value ,
+	decode d1(clk , WBRegRd , WBreg2 , M , EXRegRt , Write_Data , PC_from_Adder_to_ID , Instruction_to_ID ,
+		DecodeWB , DecodeM , EX , IDRegRs , IDRegRt , IDRegRd , DataA , DataB, imm_value ,
 		PC_from_Branch , Branch_Taken , Branch_Control , PCWrite , IFIDWrite);
 
 //////////////////////////////////////////////////
@@ -116,8 +138,15 @@ module top_mod;
 
 ////EX
 	//write your code here
-
-
+    wire [1:0] WB;
+ /*ExBrunch EXBranch(.clock(clk),.datatowrite(Write_Data),.MEMALUOut(ALUreg),.DEXWB(DecodeWB) ,.DEXM(M),.DEXEX(EX),         
+.DEXRegRs(IDRegRs),.DEXRegRt(IDRegRt),.DEXRegRd(IDRegRd),.DEXDataA(DataA),.DEXDataB(DataB),
+.DEXimm_value(imm_value),.EXMEMRegRd(RegRDreg),.MEMWBRegRd(RegRDreg),.EXMEM_RegWrite(WBreg),.MEMWB_RegWrite(WBreg2),
+.EXMWB(WB),.EXMM(M),.EXALUOut(ALUOut),.regtopass(RegRD),.EXMWriteDataIn(WriteDataIn));*/
+ 
+/////////////////////////////////////////////////////////////////////////////////////////
+///////Declared at the end of the file because of an error i donnot know :)//////////////
+/////////////////////////////////////////////////////////////////////////////////////////
 
 
 //////////////////////////////////////////////////
@@ -179,7 +208,7 @@ module top_mod;
 	//clock , WBreg , Read_Data , ALUreg , RegRDreg
 	
 	//output
-	wire     [1:0]   WBreg2;
+	//wire     [1:0]   WBreg2;
 	wire     [31:0]  Memreg2,ALUreg2;
 	//wire     [4:0]   RegRDreg2;
 
@@ -191,10 +220,15 @@ module top_mod;
 	
 	//////////////////////////
 
+ ExBrunch EXBranch(.clock(clk),.datatowrite(Write_Data),.MEMALUOut(ALUreg),.DEXWB(DecodeWB) ,.DEXM(DecodeM),.DEXEX(EX),
+.DEXRegRs(IDRegRs),.DEXRegRt(IDRegRt),.DEXRegRd(IDRegRd),.DEXDataA(DataA),.DEXDataB(DataB),
+.DEXimm_value(imm_value),.EXMEMRegRd(RegRDreg),.MEMWBRegRd(WBRegRd),.EXMEM_RegWrite(WBreg),.MEMWB_RegWrite(WBreg2),
+.EXMWB(WB),.EXMM(M),.EXALUOut(ALUOut),.regtopass(RegRD),.EXMWriteDataIn(WriteDataIn), .RtReg(EXRegRt));
+
 	////////////MUX///////////
 
 	//input
-	wire MemtoReg; assign MemtoReg = WBreg2[0:0];
+	wire MemtoReg; assign MemtoReg = WBreg2[1];
 	//Memreg2 , ALUreg2
 	
 	//output
@@ -209,6 +243,8 @@ module top_mod;
 	
 	
 	
+        //initial begin $dumpfile("w.vcd"); $dumpvars; end
+        //initial #100 $finish;
 	
 endmodule
 	

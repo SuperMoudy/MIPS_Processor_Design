@@ -1,7 +1,8 @@
 //checked//
 //no flush
 module IFID(clock,Inst,IFIDWrite ,PcPlusFour,InstReg,PcPlusFourReg);
-input           clock,IFIDWrite,flush;
+input           clock,IFIDWrite;
+//input flush;
 input           [31:0] PcPlusFour,Inst;
 output  reg     [31:0] InstReg, PcPlusFourReg;
 initial 
