@@ -1,5 +1,5 @@
 ///////////////alu control
-
+//ana aho  yasta 
 module alu_control(ALUOp,FUNCT,op_code);
 /////////////////////////////////////////
 //ports :
