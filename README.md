@@ -129,5 +129,5 @@ did them in the instruction memory.
 ## License:
 
 The Perl scripts are in public domain (CC0).
-The Verilog code is under the terms of MIT; see [LICENSE](https://github.com/SuperMoody/MIPS_Processor_Design/blob/master/LICENSE).
+The Verilog code is under the terms of MIT; see [LICENSE](https://github.com/SuperMoudy/MIPS_Processor_Design/blob/master/LICENSE).
 
